@@ -1,5 +1,9 @@
 #include <stdio.h>
 
+/**
+ * Return the number of expected bytes for the current codepoint.
+ * @param ch Pointer to first byte of UTF-8 character, modified to contain correct MSB
+ */
 int get_utf_len(unsigned char *ch)
 {
     if ((*ch & 0xF0) == 0xF0) {
@@ -51,13 +55,3 @@ int main(int argc, char **argv)
     }
     return 0;
 }
-
-/*
-Example input:
-$¢€𐍈
-Example output:
-U+24
-U+a2
-U+20ac
-U+10348
-*/
