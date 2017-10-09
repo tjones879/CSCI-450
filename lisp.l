@@ -1,14 +1,12 @@
 %option noyywrap c++
 
 %{
+#include <iostream>
 #include <stdio.h>
 #include <math.h>
 
 #include "lisp.h"
 #include "tab.hpp"
-
-int yylex(void);
-void yyerror(char *);
 
 #define DEBUG_SCANNER 1
 %}
@@ -64,7 +62,7 @@ SYMBOL "-"|"+"|"/"|"*"|"<"|">"|"="|"!"|"@"|"#"|"$"|"%"|"^"|"&"|"\\"
 {SIGN}?{DIGIT}+"."{DIGIT}*((e|E){SIGN}?{DIGIT}+)? {
         yylval = ast::node(ast::LiteralType::REAL, atof(yytext));
         #if DEBUG_SCANNER
-        std::cout << "lexed " << yytext << "as FLOAT: " << yylval;
+        std::cout << "lexed " << yytext << " as FLOAT: " << yylval;
         #endif
         return FLOAT;
     }
@@ -72,7 +70,7 @@ SYMBOL "-"|"+"|"/"|"*"|"<"|">"|"="|"!"|"@"|"#"|"$"|"%"|"^"|"&"|"\\"
 (nil) {
         yylval = ast::node(ast::LiteralType::NIL, 0);
         #if DEBUG_SCANNER
-        std::cout << "lexed " << yytext << "as NIL";
+        std::cout << "lexed " << yytext << " as NIL";
         #endif
         return NIL;
     }
@@ -81,7 +79,7 @@ SYMBOL "-"|"+"|"/"|"*"|"<"|">"|"="|"!"|"@"|"#"|"$"|"%"|"^"|"&"|"\\"
         // TODO Convert string to bool
         yylval = ast::node(ast::LiteralType::BOOL, yytext);
         #if DEBUG_SCANNER
-        std::cout << "lexed " << yytext << "as BOOL";
+        std::cout << "lexed " << yytext << " as BOOL";
         #endif
         return BOOL;
     }
@@ -89,7 +87,7 @@ SYMBOL "-"|"+"|"/"|"*"|"<"|">"|"="|"!"|"@"|"#"|"$"|"%"|"^"|"&"|"\\"
 (def|fn|defn|if|while|when|do|lambda|quote|"'"|{SYMBOL}) {
         yylval = ast::node(ast::LiteralType::RESERVED, yytext);
         #if DEBUG_SCANNER
-        std::cout << "lexed " << yytext << "as RESERVED: " << yylval;
+        std::cout << "lexed " << yytext << " as RESERVED: " << yylval;
         #endif
         return RESERVED;
     }
@@ -97,15 +95,15 @@ SYMBOL "-"|"+"|"/"|"*"|"<"|">"|"="|"!"|"@"|"#"|"$"|"%"|"^"|"&"|"\\"
 ({ALPHA}|"_")({SIGN}|{ALPHA}|{DIGIT}|{SYMBOL}|"_")* {
         yylval = ast::node(ast::LiteralType::IDENT, yytext);
         #if DEBUG_SCANNER
-        std::cout << "lexed " << yytext << "as IDENT: " << yylval;
+        std::cout << "lexed " << yytext << " as IDENT: " << yylval;
         #endif
         return IDENT;
     }
 
 \"(\\.|[^"\\])*\" {
-        yylval = ast::node(ast::LiteralType::STRING, yytext);
+        yylval = ast::node(ast::LiteralType::STRING, std::string(yytext));
         #if DEBUG_SCANNER
-        std::cout << "lexed " << yytext << "as STRING: " << yylval;
+        std::cout << "lexed " << yytext << " as STRING: " << yylval;
         #endif
         return STRING;
     }
