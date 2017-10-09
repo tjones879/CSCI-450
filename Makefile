@@ -1,13 +1,16 @@
 PROJ = lisp
 
-test: main test.txt
-	@cat test.txt && ./main < test.txt
+test: main
+	./main
 
-main: lex.yy.c
-	@gcc -o main lex.yy.c
+main: lex.yy.cpp tab.cpp
+	@g++ -std=c++11 -o main lex.yy.cpp tab.cpp 
 
-lex.yy.c: $(PROJ).l
-	@flex -o lex.yy.c $(PROJ).l
+lex.yy.cpp: $(PROJ).l
+	@flex -o lex.yy.cpp $(PROJ).l
+
+tab.cpp: $(PROJ).y
+	@bison -d -o tab.cpp $(PROJ).y
 
 clean:
-	@rm -f main lex.yy.c
+	@rm -f main lex.yy.cpp tab.cpp tab.hpp

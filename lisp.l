@@ -1,8 +1,11 @@
-%option noyywrap
+%option noyywrap c++
 
 %{
 #include <stdio.h>
 #include <math.h>
+
+#include "tab.hpp"
+
 int yylex(void);
 void yyerror(char *);
 %}
@@ -17,44 +20,62 @@ SYMBOL "-"|"+"|"/"|"*"|"<"|">"|"="|"!"|"@"|"#"|"$"|"%"|"^"|"&"|"\\"
         printf("A comment: %s\n", yytext);
     }
 
+"(" {
+        printf("%s\n", yytext);
+        return L_PAREN;
+    }
+
+")" {
+        printf("%s\n", yytext);
+        return R_PAREN;
+    }
+
+"[" {
+        printf("%s\n", yytext);
+        return L_BRACE;
+    }
+
+"]" {
+        printf("%s\n", yytext);
+        return R_BRACE;
+    }
+
 {SIGN}?{DIGIT}+ {
-        printf("An integer: %s (%d)\n", yytext, atoi(yytext));
+        printf("lexed '%s' as INTEGER(token=%d, value=%d)\n", yytext, INTEGER, atoi(yytext));
+        return INTEGER;
     }
 
 {SIGN}?{DIGIT}+"."{DIGIT}*((e|E){SIGN}?{DIGIT}+)? {
-        printf("A float: %s (%g)\n", yytext, atof(yytext));
+        printf("lexed '%s' as FLOAT(token=%d, value=%g)\n", yytext, FLOAT, atof(yytext));
+        return FLOAT;
     }
 
 (nil) {
-        printf("nil: %s\n", yytext);
+        printf("lexed '%s' as nil(token=%d)\n", yytext, NIL);
+        return NIL;
     }
 
 (false|true) {
-        printf("Boolean: %s\n", yytext);
+        printf("lexed '%s' as BOOL(token=%d)\n", yytext, BOOL);
+        return BOOL;
     }
 
 (def|fn|defn|if|while|when|do|lambda|quote|"'"|{SYMBOL}) {
-        printf("A reserved word: %s\n", yytext);
+        printf("lexed '%s' as RESERVED(token=%d)\n", yytext, RESERVED);
+        return RESERVED;
     }
 
 ({ALPHA}|"_")({SIGN}|{ALPHA}|{DIGIT}|{SYMBOL}|"_")* {
-        printf("An identifier: %s\n", yytext);
+        printf("lexed '%s' as IDENT(token=%d)\n", yytext, IDENT);
+        return IDENT;
     }
 
 \"(\\.|[^"\\])*\" {
-        printf("A string literal: %s\n", yytext);
+        printf("lexed '%s' as STRING(token=%d)\n", yytext, STRING);
+        return STRING;
     }
 
 [ \t\r\n] ;
 
 . printf("UNRECOGNIZED: %s\n", yytext);
 %%
-
-void yyerror(char *s) {
-    fprintf(stderr, "%s\n", s);
-}
-
-int main(void) {
-    yylex();
-    return 0;
-}
