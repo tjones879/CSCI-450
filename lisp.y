@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <FlexLexer.h>
+#include "lisp.h"
 
 #define DEBUG_PARSER 1
 

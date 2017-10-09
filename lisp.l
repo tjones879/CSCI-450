@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "lisp.h"
 #include "tab.hpp"
 
 int yylex(void);
