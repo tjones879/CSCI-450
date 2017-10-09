@@ -4,9 +4,9 @@ namespace ast
 {
 
 template <class T>
-void printChildren(std::ostream &out, std::vector<T> children) {
+void printChildren(std::ostream &out, std::vector<T> children, std::string prefix) {
     for (auto node : children)
-        out << node << std::endl;
+        out << prefix << "child: " << node << std::endl;
 }
 
 int ProgramNode::type() const {
@@ -15,8 +15,18 @@ int ProgramNode::type() const {
 
 void ProgramNode::print(std::ostream &out) const {
     out << "program" << std::endl;
-    printChildren(out, children);
+    printChildren(out, children, std::string("    program-"));
     out << "end program" << std::endl;
+}
+
+int AtomsNode::type() const {
+    return static_cast<int>(NodeType::ATOMS);
+}
+
+void AtomsNode::print(std::ostream &out) const {
+    out << "atoms" << std::endl;
+    printChildren(out, children, std::string("    atoms-"));
+    out << "end atoms" << std::endl;
 }
 
 int ListNode::type() const {
@@ -25,7 +35,7 @@ int ListNode::type() const {
 
 void ListNode::print(std::ostream &out) const {
     out << "list (" << std::endl;
-    printChildren(out, children);
+    printChildren(out, children, std::string("    list"));
     out << " )" << std::endl;
 }
 
@@ -35,7 +45,7 @@ int VectorNode::type() const {
 
 void VectorNode::print(std::ostream &out) const {
     out << "vector [" << std::endl;
-    printChildren(out, children);
+    printChildren(out, children, std::string("    vector"));
     out << " ]" << std::endl;
 }
 
@@ -49,7 +59,7 @@ int LiteralNode::type() const {
 }
 
 void LiteralNode::print(std::ostream &out) const {
-    std::visit([&out](auto &arg) { out << "literal " << arg << std::endl;}, literal);
+    std::visit([&out](auto &arg) { out << "literal val=" << arg << std::endl;}, literal);
 }
 
 NodePtr node(NodeType type) {

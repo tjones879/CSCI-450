@@ -13,6 +13,7 @@ typedef std::variant<int, double, bool, std::string> LiteralVariant;
 
 enum class NodeType: int {
     PROGRAM,
+    ATOMS,
     LIST,
     VECTOR,
     LITERAL
@@ -46,6 +47,14 @@ public:
 };
 
 typedef std::shared_ptr<ProgramNode> ProgramNodePtr;
+
+class AtomsNode : public Node {
+public:
+    int type() const;
+    void print(std::ostream &out) const;
+};
+
+typedef std::shared_ptr<AtomsNode> AtomsNodePtr;
 
 class ListNode : public Node {
 public:
