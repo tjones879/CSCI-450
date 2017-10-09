@@ -9,15 +9,25 @@
 
 namespace ast
 {
+typedef std::variant<int, float, bool, std::string> LiteralVariant;
+
+enum class NodeType: int {
+    PROGRAM,
+    LIST,
+    VECTOR,
+    LITERAL
+};
+
+enum class LiteralType : int {
+    BOOL,
+    NIL,
+    STRING,
+    REAL,
+    INTEGER,
+};
 
 class Node {
 public:
-    enum class NodeType: int {
-        PROGRAM,
-        LIST,
-        VECTOR,
-        LITERAL
-    };
     std::vector<std::shared_ptr<Node>> children;
 
     virtual int type() const = 0;
@@ -53,16 +63,16 @@ typedef std::shared_ptr<VectorNode> VectorNodePtr;
 
 class LiteralNode : public Node {
 public:
-    std::variant<int, float, bool, std::string> literal;
-    LiteralNode(int literal);
-    LiteralNode(float literal);
-    LiteralNode(bool literal);
-    LiteralNode(std::string literal);
+    LiteralType token_type;
+    LiteralVariant literal;
+    LiteralNode(LiteralType type, LiteralVariant literal);
     int type() const;
     void print(std::ostream &out) const;
 };
 
 typedef std::shared_ptr<LiteralNode> LiteralNodePtr;
+NodePtr node(NodeType type);
+NodePtr node(LiteralType type, LiteralVariant literal);
 
 std::ostream &operator<<(std::ostream &out, const NodePtr &p);
 } /* namespace ast */

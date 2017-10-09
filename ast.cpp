@@ -39,19 +39,8 @@ void VectorNode::print(std::ostream &out) const {
     out << " ]" << std::endl;
 }
 
-LiteralNode::LiteralNode(int literal) {
-    this->literal = literal;
-}
-
-LiteralNode::LiteralNode(float literal) {
-    this->literal = literal;
-}
-
-LiteralNode::LiteralNode(bool literal) {
-    this->literal = literal;
-}
-
-LiteralNode::LiteralNode(std::string literal) {
+LiteralNode::LiteralNode(LiteralType type, LiteralVariant literal) {
+    this->token_type = type;
     this->literal = literal;
 }
 
@@ -63,8 +52,26 @@ void LiteralNode::print(std::ostream &out) const {
     std::visit([&out](auto &arg) { out << "literal " << arg << std::endl;}, literal);
 }
 
+NodePtr node(NodeType type) {
+    switch (type) {
+    case NodeType::PROGRAM:
+        return NodePtr(new ProgramNode());
+        break;
+    case NodeType::LIST:
+        return NodePtr(new ListNode());
+        break;
+    case NodeType::VECTOR:
+        return NodePtr(new VectorNode());
+        break;
+    }
+}
+
+NodePtr node(LiteralType type, LiteralVariant literal) {
+    return NodePtr(new LiteralNode(type, literal));
+}
+
 std::ostream &operator<<(std::ostream &out, const NodePtr &p) {
     p->print(out);
     return out;
-};
+}
 } /* namespace ast */
