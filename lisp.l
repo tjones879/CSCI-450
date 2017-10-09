@@ -93,7 +93,7 @@ SYMBOL "-"|"+"|"/"|"*"|"<"|">"|"="|"!"|"@"|"#"|"$"|"%"|"^"|"&"|"\\"
     }
 
 ({ALPHA}|"_")({SIGN}|{ALPHA}|{DIGIT}|{SYMBOL}|"_")* {
-        yylval = ast::node(ast::LiteralType::IDENT, yytext);
+        yylval = ast::node(ast::LiteralType::IDENT, std::string(yytext));
         #if DEBUG_SCANNER
         std::cout << "lexed " << yytext << " as IDENT: " << yylval;
         #endif
