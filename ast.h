@@ -54,6 +54,10 @@ typedef std::shared_ptr<VectorNode> VectorNodePtr;
 class LiteralNode : public Node {
 public:
     std::variant<int, float, bool, std::string> literal;
+    LiteralNode(int literal);
+    LiteralNode(float literal);
+    LiteralNode(bool literal);
+    LiteralNode(std::string literal);
     int type() const;
     void print(std::ostream &out) const;
 };

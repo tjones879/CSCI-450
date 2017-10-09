@@ -2,6 +2,7 @@
 
 namespace ast
 {
+
 template <class T>
 void printChildren(std::ostream &out, std::vector<T> children) {
     for (auto node : children)
@@ -36,6 +37,22 @@ void VectorNode::print(std::ostream &out) const {
     out << "vector [" << std::endl;
     printChildren(out, children);
     out << " ]" << std::endl;
+}
+
+LiteralNode::LiteralNode(int literal) {
+    this->literal = literal;
+}
+
+LiteralNode::LiteralNode(float literal) {
+    this->literal = literal;
+}
+
+LiteralNode::LiteralNode(bool literal) {
+    this->literal = literal;
+}
+
+LiteralNode::LiteralNode(std::string literal) {
+    this->literal = literal;
 }
 
 int LiteralNode::type() const {
