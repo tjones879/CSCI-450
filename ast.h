@@ -9,7 +9,7 @@
 
 namespace ast
 {
-typedef std::variant<int, float, bool, std::string> LiteralVariant;
+typedef std::variant<int, double, bool, std::string> LiteralVariant;
 
 enum class NodeType: int {
     PROGRAM,
@@ -24,6 +24,8 @@ enum class LiteralType : int {
     STRING,
     REAL,
     INTEGER,
+    IDENT,
+    RESERVED
 };
 
 class Node {
