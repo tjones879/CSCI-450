@@ -25,7 +25,8 @@ program:
         std::cout << std::endl << "program <- atoms " << std::endl;
         #endif
         program = ast::NodePtr(new ast::ProgramNode());
-        program->children.push_back($1);
+        for (auto &child : $1->children)
+            program->children.push_back(child);
     };
 
 atoms:
@@ -39,7 +40,7 @@ atoms:
     atoms atom
     {
         #if DEBUG_PARSER
-        std::cout << "atoms <- atoms <-" << $1 << " atom <-" << $2 << std::endl;
+        std::cout << "atoms <- atoms :" << $1 << " atom :" << $2 << std::endl;
         #endif
         $$ = $1;
         $$->children.push_back($2);
@@ -52,7 +53,6 @@ atom:
         #if DEBUG_PARSER
         std::cout << "atom <- literal " << $1 << std::endl;
         #endif
-        $$ = $1;
     }
     | list
     {
@@ -73,49 +73,49 @@ literal:
         #if DEBUG_PARSER
         std::cout << "literal <- INTEGER " << $1 << std::endl;
         #endif
-        $$->children.push_back($1);
+        $$=$1;
     }
     | FLOAT
     {
         #if DEBUG_PARSER
         std::cout << "literal <- FLOAT " << $1 << std::endl;
         #endif
-        $$->children.push_back($1);
+        $$=$1;
     }
     | BOOL
     {
         #if DEBUG_PARSER
         std::cout << "literal <- BOOL " << $1 << std::endl;
         #endif
-        $$->children.push_back($1);
+        $$=$1;
     }
     | NIL
     {
         #if DEBUG_PARSER
         std::cout << "literal <- NIL " << $1 << std::endl;
         #endif
-        $$->children.push_back($1);
+        $$=$1;
     }
     | STRING
     {
         #if DEBUG_PARSER
         std::cout << "literal <- STRING " << $1 << std::endl;
         #endif
-        $$->children.push_back($1);
+        $$=$1;
     }
     | RESERVED
     {
         #if DEBUG_PARSER
         std::cout << "literal <- RESERVED " << $1 << std::endl;
         #endif
-        $$->children.push_back($1);
+        $$=$1;
     }
     | IDENT
     {
         #if DEBUG_PARSER
         std::cout << "literal <- IDENT " << $1 << std::endl;
         #endif
-        $$->children.push_back($1);
+        $$=$1;
     };
 
 list:
@@ -125,7 +125,8 @@ list:
         std::cout << "list <- atoms " << $2 << std::endl;
         #endif
         $$ = ast::NodePtr(ast::node(ast::NodeType::LIST));
-        $$->children.push_back($2);
+        for (auto &child : $2->children)
+            $$->children.push_back(child);
     };
 
 vector:
@@ -135,7 +136,8 @@ vector:
         std::cout << "vector <- atoms " << $2 << std::endl;
         #endif
         $$ = ast::NodePtr(ast::node(ast::NodeType::VECTOR));
-        $$->children.push_back($2);
+        for (auto &child : $2->children)
+            $$->children.push_back(child);
     };
 %%
 
