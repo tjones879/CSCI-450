@@ -1,10 +1,11 @@
 PROJ = lisp
+FLAGS = -std=c++17 -Wall -Wextra
 
 test: main
 	./main
 
 main: lex.yy.cpp tab.cpp ast.cpp
-	@g++ -std=c++17 -o main lex.yy.cpp tab.cpp ast.cpp
+	@g++ $(FLAGS) -o main lex.yy.cpp tab.cpp ast.cpp
 
 lex.yy.cpp: $(PROJ).l
 	@flex -o lex.yy.cpp $(PROJ).l
