@@ -49,6 +49,16 @@ void VectorNode::print(std::ostream &out) const {
     out << " ]" << std::endl;
 }
 
+int MapNode::type() const {
+    return static_cast<int>(NodeType::MAP);
+}
+
+void MapNode::print(std::ostream &out) const {
+    out << "map {" << std::endl;
+    printChildren(out, children, std::string("    map"));
+    out << " }" << std::endl;
+}
+
 LiteralNode::LiteralNode(LiteralType type, LiteralVariant literal) {
     this->token_type = type;
     this->literal = literal;
@@ -59,7 +69,9 @@ int LiteralNode::type() const {
 }
 
 void LiteralNode::print(std::ostream &out) const {
-    std::visit([&out](auto &arg) { out << "literal val=" << arg << std::endl;}, literal);
+    out << "literal type= " << static_cast<int>(token_type);
+    std::visit([&out](auto &arg) { out << ", literal val=" << arg << std::endl;}, literal);
+    printChildren(out, children, std::string("    literal"));
 }
 
 NodePtr node(NodeType type) {
@@ -72,6 +84,12 @@ NodePtr node(NodeType type) {
         break;
     case NodeType::VECTOR:
         return NodePtr(new VectorNode());
+        break;
+    case NodeType::MAP:
+        return NodePtr(new MapNode());
+        break;
+    default:
+        return NULL;
         break;
     }
 }

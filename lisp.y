@@ -14,7 +14,7 @@ int yylex() { return lex.yylex(); }
 ast::NodePtr program(0);
 %}
 
-%token INTEGER FLOAT NIL BOOL RESERVED IDENT STRING L_PAREN R_PAREN L_BRACE R_BRACE
+%token INTEGER FLOAT NIL BOOL RESERVED IDENT STRING L_PAREN R_PAREN L_BRACE R_BRACE L_CURLY R_CURLY COLON
 
 %%
 
@@ -65,6 +65,12 @@ atom:
         #if DEBUG_PARSER
         std::cout << "atom <- vector " << $1 << std::endl;
         #endif
+    }
+    | map
+    {
+        #if DEBUG_PARSER
+        std::cout << "atom <- map " << $1 << std::endl;
+        #endif
     };
 
 literal:
@@ -110,6 +116,14 @@ literal:
         #endif
         $$=$1;
     }
+    | COLON IDENT
+    {
+        #if DEBUG_PARSER
+        std::cout << "literal <- keyword " << $2 << std::endl;
+        #endif
+        std::dynamic_pointer_cast<ast::LiteralNode>($2)->token_type = ast::LiteralType::KEYWORD;
+        $$ = $2;
+    }
     | IDENT
     {
         #if DEBUG_PARSER
@@ -139,6 +153,17 @@ vector:
         for (auto &child : $2->children)
             $$->children.push_back(child);
     };
+
+map:
+    L_CURLY atoms R_CURLY
+    {
+        #if DEBUG_PARSER
+        std::cout << "map <- atoms " << $2 << std::endl;
+        #endif
+        $$ = ast::NodePtr(ast::node(ast::NodeType::MAP));
+        for (auto &child : $2->children)
+            $$->children.push_back(child);
+    };
 %%
 
 int yywrap()
@@ -151,7 +176,7 @@ void yyerror(const char *str)
     fprintf(stderr, "error %s\n", str);
 }
 
-int main(int argc, char **argv)
+int main()
 {
     yyparse();
     if (program)

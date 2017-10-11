@@ -8,7 +8,7 @@
 #include "lisp.h"
 #include "tab.hpp"
 
-#define DEBUG_SCANNER 1
+#define DEBUG_SCANNER 0
 %}
 
 SIGN "-"|"+"
@@ -23,6 +23,13 @@ SYMBOL "-"|"+"|"/"|"*"|"<"|">"|"="|"!"|"@"|"#"|"$"|"%"|"^"|"&"|"\\"
         #endif
     }
 
+":" {
+        #if DEBUG_SCANNER
+        printf("COLON: %s\n", yytext);
+        #endif
+        return COLON;
+    }
+
 "(" {
         #if DEBUG_SCANNER
         printf("%s\n", yytext);
@@ -35,6 +42,20 @@ SYMBOL "-"|"+"|"/"|"*"|"<"|">"|"="|"!"|"@"|"#"|"$"|"%"|"^"|"&"|"\\"
         printf("%s\n", yytext);
         #endif
         return R_PAREN;
+    }
+
+"{" {
+        #if DEBUG_SCANNER
+        printf("%s\n", yytext);
+        #endif
+        return L_CURLY;
+    }
+
+"}" {
+        #if DEBUG_SCANNER
+        printf("%s\n", yytext);
+        #endif
+        return R_CURLY;
     }
 
 "[" {

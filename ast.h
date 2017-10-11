@@ -16,6 +16,7 @@ enum class NodeType: int {
     ATOMS,
     LIST,
     VECTOR,
+    MAP,
     LITERAL
 };
 
@@ -26,6 +27,7 @@ enum class LiteralType : int {
     REAL,
     INTEGER,
     IDENT,
+    KEYWORD,
     RESERVED
 };
 
@@ -71,6 +73,14 @@ public:
 };
 
 typedef std::shared_ptr<VectorNode> VectorNodePtr;
+
+class MapNode : public Node {
+public:
+    int type() const;
+    void print(std::ostream &out) const;
+};
+
+typedef std::shared_ptr<MapNode> MapNodePtr;
 
 class LiteralNode : public Node {
 public:
