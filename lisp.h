@@ -1,4 +1,4 @@
-#ifndef LSIP_H
+#ifndef LISP_H
 #define LISP_H
 
 #include "ast.h"
