@@ -1,5 +1,25 @@
-# CSCI-450
+# HW-3
 
-### [HW 1](https://github.com/tjones879/CSCI-450/tree/HW-1)
+Due: Oct. 23 2017
 
-### [HW 2](https://github.com/tjones879/CSCI-450/tree/HW-2)
+Task: Write a simple calculator parser using a recursive descent parser generator.
+
+### Compile and Run
+
+With leg installed in your machines path:
+
+```
+leg calc.leg > ex.c
+gcc ex.c
+```
+
+### Examples
+
+```
+cat input.txt && ./a.out < input.txt
+1+2+3
+5*3-6/4
+
+6.000000
+13.500000
+```

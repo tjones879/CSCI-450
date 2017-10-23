@@ -1,0 +1,34 @@
+%{
+#include <stdio.h>
+#include <stdlib.h>
+
+#define YYSTYPE double
+%}
+
+Stmt    = - e:Exp EOL           { printf("%f\n", e); }
+Exp     = s:Sum                 { $$ = s; }
+Sum     = l:Factor
+	    ( '+'  -  r:Factor      { l += r; }
+	    | '-'  -  r:Factor      { l -= r; }
+	    )*                      { $$ = l; }
+
+Factor  = l:Value
+	      ( '*'  -  r:Value     { l *= r; }
+	      | '/'  -  r:Value     { l /= r; }
+	      )*                    { $$ = l; }
+
+Value   = i:Number              { $$ = atof(yytext); }
+		| '(' i:Exp ')'	        { $$ = i; }
+
+Number  = <[0-9]+'.'?[0-9]*> -  { $$ = atof(yytext); }
+
+-       = [ \t]*
+EOL     = [\r\n]
+
+%%
+
+int main()
+{
+	while (yyparse());
+	return 0;
+}
