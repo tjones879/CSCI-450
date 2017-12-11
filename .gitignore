@@ -1,0 +1,9 @@
+gen/
+CMakeCache.txt
+CMakeFiles/
+*.cmake
+Makefile
+Test
+run
+Testing/
+src/*.a
